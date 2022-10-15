@@ -7,6 +7,9 @@ import pandas as pd
 # from dotenv import load_dotenv
 import json
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+
 # import session_util
 options = Options()
 # options.add_argument("--headless")
@@ -19,15 +22,16 @@ options.add_argument("--disable-infobars")
 options.add_argument("--disable-dev-shm-usage")
 
 
-PATH = "C:\\Users\\Admin\\Downloads\\chromedriver"
+PATH = "/home/vikram/Downloads/chromedriver"
 
-driver = webdriver.Chrome(executable_path=PATH, options= options)
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 
 links=[]
 info ={}
 count =0
 def get_links():
-    df = pd.read_csv('C:\\Users\\Admin\\Documents\\tact\\scraping\\links.csv')
+    df = pd.read_csv('links.csv')
     links = df.iloc[:,0].tolist()
 
     return links 
@@ -37,9 +41,9 @@ def scrape(link):
     driver.get(link)
     driver.maximize_window()
     # time.sleep(3)
-    title = driver.find_element('','//*[@id="productTitle"]').text
+    title = driver.find_element('xpath','//*[@id="productTitle"]').text
     print(title)
-    ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewText"]')
+    ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
     ratings_no = ratings.text
     ratings_link = ratings.get_attribute('href')
     desc = driver.find_element('xpath','//*[@id="productDescription"]/p/span').text
@@ -49,7 +53,7 @@ def scrape(link):
 
     # reviews_link = []
     review_titles = []
-    english = driver.find_element('xpath','//*[@id="cr-translate--450546797"]/a[2]').click()
+    # english = driver.find_element('xpath','//*[@id="cr-translate--450546797"]/a[2]').click()
     see_all_reviews = driver.find_element('xpath','//*[@id="reviews-medley-footer"]/div[2]/a').click()
 
     for j in range(2):
@@ -89,8 +93,9 @@ def startpy():
     links = get_links()
     # print(links[0:10])
 
-    for link in links[0:2]:
-        scrape(link)
+    # for link in links[0:2]:
+    link="https://www.amazon.com/dp/B000052YHR"
+    scrape(str(link.strip()))
 
 
 
