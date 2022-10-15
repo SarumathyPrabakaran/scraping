@@ -22,7 +22,7 @@ options.add_argument("--disable-infobars")
 options.add_argument("--disable-dev-shm-usage")
 
 
-PATH = "/home/vikram/Downloads/chromedriver"
+PATH = "C:\\coUsers\\Admin\\Downloads\\chromedriver"
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
@@ -43,6 +43,7 @@ def scrape(link):
     # time.sleep(3)
     title = driver.find_element('xpath','//*[@id="productTitle"]').text
     print(title)
+    img_url = driver.find_element('xpath','//*[@id="main-image-container"]/ul/li[5]/span/span/div/img').get_attribute('src')
     ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
     ratings_no = ratings.text
     ratings_link = ratings.get_attribute('href')
@@ -71,6 +72,7 @@ def scrape(link):
     info['ratings'] = ratings_no
     info['description'] = desc
     info['reviews'] = review_titles
+    info['img'] = img_url
 
     global count 
     count = count+1
