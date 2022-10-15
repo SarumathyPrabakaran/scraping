@@ -57,10 +57,11 @@ def scrape(link):
     see_all_reviews = driver.find_element('xpath','//*[@id="reviews-medley-footer"]/div[2]/a').click()
 
     for j in range(2):
-        for i in range(1,11):
-            rlink     = driver.find_element('xpath','//*[@data-hook="review-body"]')
+        
+        rlink     = driver.find_elements('xpath','//*[@data-hook="review-body"]')
             # reviews_link.append(rlink)
-            review_titles.append(rlink.text)
+        for i in rlink:
+            review_titles.append(i.text)
         
         next_page = driver.find_element('xpath','//*[@id="cm_cr-pagination_bar"]/ul/li[2]/a').click()
         time.sleep(2)
