@@ -10,6 +10,8 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service
 
+# from symbol import pass_stmt
+
 # import session_util
 options = Options()
 # options.add_argument("--headless")
@@ -30,11 +32,24 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 links=[]
 info ={}
 count =0
+total_links_list =[]
+
+
 def get_links():
     df = pd.read_csv('links.csv')
     links = df.iloc[:,0].tolist()
 
     return links 
+
+def get_scraped_links():
+    
+    f = open('amazon.json',)
+    data = json.load(f)
+    
+    for i in data['product']:
+        total_links_list.append(i['url'])
+
+     
 
 def scrape(link):
     print(link)
@@ -43,18 +58,24 @@ def scrape(link):
     # time.sleep(3)
     title = driver.find_element('xpath','//*[@id="productTitle"]').text
     print(title)
-    # img_url = driver.find_element('xpath','//*[@id="main-image-container"]/ul/li[5]/span/span/div/img').get_attribute('src')
+   
     img_url = driver.find_element("xpath",'//*[@id="landingImage"]').get_attribute('src')
     print(img_url)
     ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
     ratings_no = ratings.text
     ratings_link = ratings.get_attribute('href')
-    desc = driver.find_element('xpath','//*[@id="productDescription"]/p/span').text
 
+    try:
+        desc = driver.find_element('xpath','//*[@id="productDescription"]/p/span').text
+    except:
+        try:
+            desc= driver.find_element('xpath','//*[@id="visual-rich-product-description"]/div/div[1]/div/div/div/div[2]/span').text
+        except:
+            desc = title
     driver.get(ratings_link)
     
 
-    # reviews_link = []
+   
     review_titles = []
     # english = driver.find_element('xpath','//*[@id="cr-translate--450546797"]/a[2]').click()
     see_all_reviews = driver.find_element('xpath','//*[@id="reviews-medley-footer"]/div[2]/a').click()
@@ -66,7 +87,15 @@ def scrape(link):
         for i in rlink:
             review_titles.append(i.text)
         
-        next_page = driver.find_element('xpath','//*[@id="cm_cr-pagination_bar"]/ul/li[2]/a').click()
+        try:
+             next_page = driver.find_element('xpath','//*[@id="cm_cr-pagination_bar"]/ul/li[2]/a').click()
+        except:
+            try:
+                next= driver.find_element('xpath','//*[@id="cm_cr-pagination_bar"]/ul/li[2]/a').get_attribute('href')
+                driver.get(next)
+            except:
+                pass
+
         time.sleep(2)
 
     info['link'] = link
@@ -99,9 +128,11 @@ def scrape(link):
 def startpy():
     links = get_links()
     # print(links[0:10])
-
-    for link in links[0:2]:
-       
+    get_scraped_links()
+    for link in links[13:50]:
+        if link in total_links_list:
+            print("already scraped: "+link)
+            continue
         scrape(str(link.strip()))
 
 
