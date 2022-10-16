@@ -44,6 +44,8 @@ def scrape(link):
     title = driver.find_element('xpath','//*[@id="productTitle"]').text
     print(title)
     # img_url = driver.find_element('xpath','//*[@id="main-image-container"]/ul/li[5]/span/span/div/img').get_attribute('src')
+    img_url = driver.find_element("xpath",'//*[@id="landingImage"]').get_attribute('src')
+    print(img_url)
     ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
     ratings_no = ratings.text
     ratings_link = ratings.get_attribute('href')
@@ -72,7 +74,7 @@ def scrape(link):
     info['ratings'] = ratings_no
     info['description'] = desc
     info['reviews'] = review_titles
-    # info['img'] = img_url
+    info['img'] = img_url
 
     global count 
     count = count+1
@@ -96,9 +98,9 @@ def startpy():
     links = get_links()
     # print(links[0:10])
 
-    # for link in links[0:2]:
-    link="https://www.amazon.com/dp/B000052YHR"
-    scrape(str(link.strip()))
+    for link in links[0:2]:
+       
+        scrape(str(link.strip()))
 
 
 
