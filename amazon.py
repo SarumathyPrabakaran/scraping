@@ -88,7 +88,10 @@ def scrape(link):
    
     review_titles = []
     # english = driver.find_element('xpath','//*[@id="cr-translate--450546797"]/a[2]').click()
-    see_all_reviews = driver.find_element('xpath','//*[@id="reviews-medley-footer"]/div[2]/a').click()
+    try:
+        see_all_reviews = driver.find_element('xpath','//*[@id="reviews-medley-footer"]/div[2]/a').click()
+    except:
+        see_all_reviews = driver.find_element('xpath','//*[@id="cr-pagination-footer-0"]/a').click()
 
     for j in range(2):
         
@@ -139,7 +142,7 @@ def startpy():
     links = get_links()
     # print(links[0:10])
     get_scraped_links()
-    for link in links[30:50]:
+    for link in links[36:50]:
         if link in total_links_list:
             print("already scraped: "+link)
             continue
