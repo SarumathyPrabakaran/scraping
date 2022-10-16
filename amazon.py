@@ -71,26 +71,28 @@ def scrape(link):
 
     info['link'] = link
     info['title']= title
+    info['img'] = img_url
     info['ratings'] = ratings_no
     info['description'] = desc
     info['reviews'] = review_titles
-    info['img'] = img_url
+    
 
     global count 
     count = count+1
     print(count)
 
-    with open("amazon.json","r") as f1:
+    with open('amazon.json') as f:
+        data = json.load(f)
 
-        old_data = json.load(f1)
-        # print(type(old_data))
-        old_data.update(info)
-
-
-    # print(old_data)
-    with open("amazon.json","w") as f2:
-        json.dump(old_data,f2)
-        print("done!\\n")
+    with open('amazon.json',"w") as of:    
+        try:
+                
+            data ["products"].append(info)
+        except:
+            data = {
+                    "products" : [info]
+                }
+        json.dump(data,of)
 
 
 
