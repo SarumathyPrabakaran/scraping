@@ -142,7 +142,7 @@ def startpy():
     links = get_links()
     # print(links[0:10])
     get_scraped_links()
-    for link in links[36:50]:
+    for link in links[101:150]:
         if link in total_links_list:
             print("already scraped: "+link)
             continue
