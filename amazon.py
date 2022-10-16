@@ -94,9 +94,10 @@ def scrape(link):
         try:
             see_all_reviews = driver.find_element('xpath','//*[@id="cr-pagination-footer-0"]/a').click()
         except:
-            global unavail
-            unavail +=1 
-            print(f"unavailable: {unavail}")
+            # global unavail
+            # unavail +=1 
+            # print(f"unavailable: {unavail}")
+            return
 
 
     for j in range(2):
@@ -148,7 +149,7 @@ def startpy():
     links = get_links()
     # print(links[0:10])
     get_scraped_links()
-    for link in links[101:150]:
+    for link in links[150:250]:
         if link in total_links_list:
             print("already scraped: "+link)
             continue
