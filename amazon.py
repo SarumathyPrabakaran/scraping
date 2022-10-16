@@ -44,7 +44,7 @@ def get_links():
 
 def get_scraped_links():
     
-    f = open('amazon.json',)
+    f = open('amazon2.json',)
     data = json.load(f)
     
     for i in data['products']:
@@ -57,10 +57,18 @@ def scrape(link):
     driver.get(link)
     driver.maximize_window()
     # time.sleep(3)
-    title = driver.find_element('xpath','//*[@id="productTitle"]').text
+    try:
+        title = driver.find_element('xpath','//*[@id="productTitle"]').text
+    except:
+        return
     print(title)
-   
-    img_url = driver.find_element("xpath",'//*[@id="landingImage"]').get_attribute('src')
+    
+
+    try:
+        img_url = driver.find_element("xpath",'//*[@id="landingImage"]').get_attribute('src')
+
+    except:
+        img_url = driver.find_element('xpath','//*[@id="main-image-container"]/ul/li[4]/span/span/div/img').get_attribute('src')
     print(img_url)
     try:
         ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
@@ -72,8 +80,16 @@ def scrape(link):
         print(f"unavailable: {unavail}")
         return
         
-
-
+    try:
+        price = driver.find_element('xpath','//*[@id="corePriceDisplay_desktop_feature_div"]/div[1]/span[2]/span[2]').text
+    except:
+        try:
+            price = driver.find_element('xpath','//*[@id="style_name_0_price"]').text
+        except:
+            try:
+                price = driver.find_element('xpath','//*[@id="size_name_0_price"]/p[1]').text
+            except:
+                price =' '
     try:
         desc = driver.find_element('xpath','//*[@id="productDescription"]/p/span').text
     except:
@@ -120,6 +136,7 @@ def scrape(link):
 
     info['link'] = link
     info['title']= title
+    info['price'] = price
     info['img'] = img_url
     info['ratings'] = ratings_no
     info['description'] = desc
@@ -130,10 +147,10 @@ def scrape(link):
     count = count+1
     print(count)
 
-    with open('amazon.json') as f:
+    with open('amazon2.json') as f:
         data = json.load(f)
 
-    with open('amazon.json',"w") as of:    
+    with open('amazon2.json',"w") as of:    
         try:
                 
             data ["products"].append(info)
@@ -149,7 +166,7 @@ def startpy():
     links = get_links()
     # print(links[0:10])
     get_scraped_links()
-    for link in links[150:250]:
+    for link in links[901:999]:
         if link in total_links_list:
             print("already scraped: "+link)
             continue
