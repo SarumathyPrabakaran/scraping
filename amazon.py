@@ -91,7 +91,13 @@ def scrape(link):
     try:
         see_all_reviews = driver.find_element('xpath','//*[@id="reviews-medley-footer"]/div[2]/a').click()
     except:
-        see_all_reviews = driver.find_element('xpath','//*[@id="cr-pagination-footer-0"]/a').click()
+        try:
+            see_all_reviews = driver.find_element('xpath','//*[@id="cr-pagination-footer-0"]/a').click()
+        except:
+            global unavail
+            unavail +=1 
+            print(f"unavailable: {unavail}")
+
 
     for j in range(2):
         
