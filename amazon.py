@@ -32,6 +32,7 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), opti
 links=[]
 info ={}
 count =0
+unavail= 0
 total_links_list =[]
 
 
@@ -46,8 +47,8 @@ def get_scraped_links():
     f = open('amazon.json',)
     data = json.load(f)
     
-    for i in data['product']:
-        total_links_list.append(i['url'])
+    for i in data['products']:
+        total_links_list.append(i['link'])
 
      
 
@@ -61,9 +62,17 @@ def scrape(link):
    
     img_url = driver.find_element("xpath",'//*[@id="landingImage"]').get_attribute('src')
     print(img_url)
-    ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
-    ratings_no = ratings.text
-    ratings_link = ratings.get_attribute('href')
+    try:
+        ratings = driver.find_element('xpath','//*[@id="acrCustomerReviewLink"]')
+        ratings_no = ratings.text
+        ratings_link = ratings.get_attribute('href')
+    except:
+        global unavail
+        unavail +=1 
+        print(f"unavailable: {unavail}")
+        return
+        
+
 
     try:
         desc = driver.find_element('xpath','//*[@id="productDescription"]/p/span').text
@@ -72,6 +81,7 @@ def scrape(link):
             desc= driver.find_element('xpath','//*[@id="visual-rich-product-description"]/div/div[1]/div/div/div/div[2]/span').text
         except:
             desc = title
+    
     driver.get(ratings_link)
     
 
@@ -129,7 +139,7 @@ def startpy():
     links = get_links()
     # print(links[0:10])
     get_scraped_links()
-    for link in links[13:50]:
+    for link in links[30:50]:
         if link in total_links_list:
             print("already scraped: "+link)
             continue
