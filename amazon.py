@@ -90,6 +90,8 @@ def scrape(link):
                 price = driver.find_element('xpath','//*[@id="size_name_0_price"]/p[1]').text
             except:
                 price =' '
+
+                
     try:
         desc = driver.find_element('xpath','//*[@id="productDescription"]/p/span').text
     except:
