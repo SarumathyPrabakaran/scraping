@@ -9,3 +9,5 @@ for i in data['products']:
     total_links_list.append(i['ratings'])
 
 print(total_links_list)
+
+
